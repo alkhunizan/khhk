@@ -88,7 +88,7 @@ const App: React.FC = () => {
   };
 
   const handleSignIn = () => {
-    if (GOOGLE_CLIENT_ID.startsWith("YOUR_GOOGLE_CLIENT_ID")) {
+    if (GOOGLE_CLIENT_ID.startsWith(126221875461-12f1l59u7iv2nj8g82ktgvi8umodoih3.apps.googleusercontent.com)) {
         alert("Please replace 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com' with your actual Google Client ID in App.tsx");
         return;
     }
