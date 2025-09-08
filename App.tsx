@@ -7,7 +7,7 @@ import type { Booking, User } from './types';
 import { MONTHS } from './constants';
 
 // IMPORTANT: Replace with your actual Google Client ID
-const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "126221875461-12f1l59u7iv2nj8g82ktgvi8umodoih3.apps.googleusercontent.com";
 
 const YEARS = [1446, 1447, 1448];
 
