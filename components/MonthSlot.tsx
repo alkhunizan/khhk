@@ -53,19 +53,17 @@ export const MonthSlot: React.FC<MonthSlotProps> = ({ month, year, isBooked, isU
   const unavailableClasses = "bg-slate-200 text-slate-500";
   const bookedClasses = "bg-green-100 border-2 border-green-300";
   const availableClasses = "bg-white hover:shadow-xl";
-  
-  const canBook = user && !isBooked && !isUnavailable;
 
   const getStatusClasses = () => {
     if (isUnavailable) return unavailableClasses;
     if (isBooked) return bookedClasses;
-    return `${availableClasses} ${canBook ? 'cursor-pointer' : ''}`;
+    return availableClasses;
   };
 
   const isOwner = user && bookingDetails && user.email === bookingDetails.bookedByEmail;
 
   return (
-    <div className={`${baseClasses} ${getStatusClasses()}`} onClick={canBook ? onBook : undefined}>
+    <div className={`${baseClasses} ${getStatusClasses()}`}>
       <div>
         <h3 className="text-2xl font-bold font-amiri">{month}</h3>
         <p className="text-sm text-slate-500 mb-4">{getGregorianApproximation(month, year)}</p>
@@ -114,11 +112,10 @@ export const MonthSlot: React.FC<MonthSlotProps> = ({ month, year, isBooked, isU
         ) : (
           <button
             onClick={onBook}
-            disabled={!user}
-            className="w-full bg-teal-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed"
+            className="w-full bg-teal-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
             aria-label={user ? `حجز شهر ${month}`: `يجب تسجيل الدخول لحجز شهر ${month}`}
           >
-            حجز هذا الشهر
+            {user ? 'حجز هذا الشهر' : 'تسجيل الدخول للحجز'}
           </button>
         )}
       </div>

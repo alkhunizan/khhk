@@ -7,7 +7,7 @@ import type { Booking, User } from './types';
 import { MONTHS } from './constants';
 
 // IMPORTANT: Replace with your actual Google Client ID
-const GOOGLE_CLIENT_ID = "126221875461-12f1l59u7iv2nj8g82ktgvi8umodoih3.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
 const YEARS = [1446, 1447, 1448];
 
@@ -41,10 +41,26 @@ const decodeJwtPayload = (token: string) => {
 
 
 const App: React.FC = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>(() => {
+    try {
+      const savedBookings = localStorage.getItem('familyGatheringBookings');
+      return savedBookings ? JSON.parse(savedBookings) : [];
+    } catch (error) {
+      console.error("Failed to load bookings from local storage", error);
+      return [];
+    }
+  });
   const [bookingTarget, setBookingTarget] = useState<{ month: string; year: number; booking?: Booking } | null>(null);
   const [selectedYear, setSelectedYear] = useState<number>(YEARS[0]);
   const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    try {
+        localStorage.setItem('familyGatheringBookings', JSON.stringify(bookings));
+    } catch (error) {
+        console.error("Failed to save bookings to local storage", error);
+    }
+  }, [bookings]);
 
   useEffect(() => {
     if (typeof window.google === 'undefined') return;
