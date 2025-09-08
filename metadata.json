@@ -1,0 +1,5 @@
+{
+  "name": "Family Gathering Scheduler",
+  "description": "A web application for scheduling a monthly family gathering, allowing hosts to book their preferred month, day, and location.",
+  "requestFramePermissions": []
+}
