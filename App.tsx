@@ -87,17 +87,21 @@ const App: React.FC = () => {
     }
   };
 
-  const handleSignIn = () => {
-    if (GOOGLE_CLIENT_ID.startsWith(126221875461-12f1l59u7iv2nj8g82ktgvi8umodoih3.apps.googleusercontent.com)) {
-        alert("Please replace 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com' with your actual Google Client ID in App.tsx");
-        return;
-    }
-    if (typeof window.google === 'undefined') {
-        alert("Google Identity Services are not loaded yet. Please try again in a moment.");
-        return;
-    }
-    window.google.accounts.id.prompt();
-  };
+ // Replace this with your actual Google Client ID
+const GOOGLE_CLIENT_ID = "126221875461-12f1l59u7iv2nj8g82ktgvi8umodoih3.apps.googleusercontent.com";
+
+const handleSignIn = () => {
+  if (GOOGLE_CLIENT_ID === "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com") {
+    alert("Please replace 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com' with your actual Google Client ID in App.tsx");
+    return;
+  }
+  if (typeof window.google === 'undefined') {
+    alert("Google Identity Services are not loaded yet. Please try again in a moment.");
+    return;
+  }
+  window.google.accounts.id.prompt();
+};
+
 
   const handleSignOut = () => {
     if (typeof window.google !== 'undefined') {
