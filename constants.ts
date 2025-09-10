@@ -1,6 +1,8 @@
 
 import type { Location } from './types';
 
+export const GOOGLE_CLIENT_ID = '1080619407432-fl8p71nqcjtka20e04fnjlk3cn8p04au.apps.googleusercontent.com';
+
 export const CORE_HOSTS_MEN: string[] = [
   'أبو سلطان', 'أبو عبد الله', 'أبو ثامر', 'العم عبد الرحمن', 
   'أبو فيصل', 'أبو عاصم', 'أبو أسامة', 'أبو فارس', 'أبو هشام', 'أبو محمد'
