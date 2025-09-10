@@ -6,7 +6,7 @@ interface BookingModalProps {
   month: string;
   year: number;
   onClose: () => void;
-  onBook: (booking: Omit<Booking, 'id' | 'bookedByEmail'>) => void;
+  onBook: (booking: Omit<Booking, 'id'>) => void;
   bookingToEdit?: Booking;
 }
 

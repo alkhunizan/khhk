@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Booking, User } from '../types';
+import type { Booking } from '../types';
 import { HIJRI_MONTHS_ORDER } from '../constants';
 
 interface MonthSlotProps {
@@ -9,7 +9,6 @@ interface MonthSlotProps {
   isUnavailable: boolean;
   bookingDetails?: Booking;
   onBook: () => void;
-  user: User | null;
   onEdit: (booking: Booking) => void;
   onCancel: (bookingId: number) => void;
 }
@@ -48,7 +47,7 @@ const LocationIcon: React.FC = () => (
     </svg>
 );
 
-export const MonthSlot: React.FC<MonthSlotProps> = ({ month, year, isBooked, isUnavailable, bookingDetails, onBook, user, onEdit, onCancel }) => {
+export const MonthSlot: React.FC<MonthSlotProps> = ({ month, year, isBooked, isUnavailable, bookingDetails, onBook, onEdit, onCancel }) => {
   const baseClasses = "rounded-xl shadow-lg p-6 flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1";
   const unavailableClasses = "bg-slate-200 text-slate-500";
   const bookedClasses = "bg-green-100 border-2 border-green-300";
@@ -59,8 +58,6 @@ export const MonthSlot: React.FC<MonthSlotProps> = ({ month, year, isBooked, isU
     if (isBooked) return bookedClasses;
     return availableClasses;
   };
-
-  const isOwner = user && bookingDetails && user.email === bookingDetails.bookedByEmail;
 
   return (
     <div className={`${baseClasses} ${getStatusClasses()}`}>
@@ -75,29 +72,27 @@ export const MonthSlot: React.FC<MonthSlotProps> = ({ month, year, isBooked, isU
               <p className="flex items-center"><CalendarIcon /> {bookingDetails.day}</p>
               <p className="flex items-center"><LocationIcon /> {bookingDetails.location}</p>
             </div>
-            {isOwner && (
-                <div className="flex justify-end gap-2 mt-4 border-t pt-3">
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); onEdit(bookingDetails); }}
-                        className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors py-1 px-3 rounded-md hover:bg-blue-100"
-                        aria-label={`تعديل حجز شهر ${month}`}
-                    >
-                        تعديل
-                    </button>
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); onCancel(bookingDetails.id); }}
-                        className="text-sm font-semibold text-red-600 hover:text-red-800 transition-colors py-1 px-3 rounded-md hover:bg-red-100"
-                        aria-label={`إلغاء حجز شهر ${month}`}
-                    >
-                        إلغاء
-                    </button>
-                </div>
-            )}
+            <div className="flex justify-end gap-2 mt-4 border-t pt-3">
+              <button
+                onClick={(e) => { e.stopPropagation(); onEdit(bookingDetails); }}
+                className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors py-1 px-3 rounded-md hover:bg-blue-100"
+                aria-label={`تعديل حجز شهر ${month}`}
+              >
+                تعديل
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); onCancel(bookingDetails.id); }}
+                className="text-sm font-semibold text-red-600 hover:text-red-800 transition-colors py-1 px-3 rounded-md hover:bg-red-100"
+                aria-label={`إلغاء حجز شهر ${month}`}
+              >
+                إلغاء
+              </button>
+            </div>
           </>
         ) : isUnavailable ? (
           <p className="text-slate-500 font-semibold">فترة إجازة / توقف</p>
         ) : (
-          <p className="text-slate-500">{user ? 'هذا الشهر متاح للحجز' : 'سجل الدخول لتتمكن من الحجز'}</p>
+          <p className="text-slate-500">هذا الشهر متاح للحجز</p>
         )}
       </div>
       <div className="mt-6">
@@ -113,9 +108,9 @@ export const MonthSlot: React.FC<MonthSlotProps> = ({ month, year, isBooked, isU
           <button
             onClick={onBook}
             className="w-full bg-teal-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
-            aria-label={user ? `حجز شهر ${month}`: `يجب تسجيل الدخول لحجز شهر ${month}`}
+            aria-label={`حجز شهر ${month}`}
           >
-            {user ? 'حجز هذا الشهر' : 'تسجيل الدخول للحجز'}
+            حجز هذا الشهر
           </button>
         )}
       </div>

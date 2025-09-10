@@ -8,11 +8,4 @@ export interface Booking {
   host: string;
   day: DayOfWeek;
   location: Location;
-  bookedByEmail: string;
-}
-
-export interface User {
-  name: string;
-  email: string;
-  picture: string;
 }
