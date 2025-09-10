@@ -3,42 +3,10 @@ import { Header } from './components/Header';
 import { Introduction } from './components/Introduction';
 import { Schedule } from './components/Schedule';
 import { BookingModal } from './components/BookingModal';
-import type { Booking, User } from './types';
+import type { Booking } from './types';
 import { MONTHS } from './constants';
 
-// IMPORTANT: Replace with your actual Google Client ID
-const GOOGLE_CLIENT_ID = "126221875461-12f1l59u7iv2nj8g82ktgvi8umodoih3.apps.googleusercontent.com";
-
 const YEARS = [1446, 1447, 1448];
-
-// Fix: Add type definition for window.google to avoid TypeScript errors.
-declare global {
-  interface Window {
-    google: any;
-  }
-}
-
-// Fix: Removed atobPolyfill with Buffer dependency and replaced with a robust JWT decoder to prevent type errors and handle JWT decoding correctly.
-const decodeJwtPayload = (token: string) => {
-    try {
-        const base64Url = token.split('.')[1];
-        if (!base64Url) return null;
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-            window.atob(base64)
-                .split('')
-                .map(function (c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                })
-                .join('')
-        );
-        return JSON.parse(jsonPayload);
-    } catch (e) {
-        console.error("Error decoding JWT", e);
-        return null;
-    }
-};
-
 
 const App: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>(() => {
@@ -52,7 +20,6 @@ const App: React.FC = () => {
   });
   const [bookingTarget, setBookingTarget] = useState<{ month: string; year: number; booking?: Booking } | null>(null);
   const [selectedYear, setSelectedYear] = useState<number>(YEARS[0]);
-  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     try {
@@ -62,60 +29,7 @@ const App: React.FC = () => {
     }
   }, [bookings]);
 
-  useEffect(() => {
-    if (typeof window.google === 'undefined') return;
-
-    window.google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleCredentialResponse,
-    });
-  }, []);
-
-  const handleCredentialResponse = (response: any) => {
-    try {
-        const idToken = response.credential;
-        const payload = decodeJwtPayload(idToken);
-        if (payload) {
-            setUser({
-                name: payload.name,
-                email: payload.email,
-                picture: payload.picture,
-            });
-        }
-    } catch (error) {
-        console.error("Error processing credential response:", error);
-    }
-  };
-
- // Replace this with your actual Google Client ID
-const GOOGLE_CLIENT_ID = "126221875461-12f1l59u7iv2nj8g82ktgvi8umodoih3.apps.googleusercontent.com";
-
-const handleSignIn = () => {
-  if (GOOGLE_CLIENT_ID === "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com") {
-    alert("Please replace 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com' with your actual Google Client ID in App.tsx");
-    return;
-  }
-  if (typeof window.google === 'undefined') {
-    alert("Google Identity Services are not loaded yet. Please try again in a moment.");
-    return;
-  }
-  window.google.accounts.id.prompt();
-};
-
-
-  const handleSignOut = () => {
-    if (typeof window.google !== 'undefined') {
-        window.google.accounts.id.disableAutoSelect();
-    }
-    setUser(null);
-  };
-
   const handleOpenModal = (month: string, year: number) => {
-    if (!user) {
-        alert('الرجاء تسجيل الدخول أولاً للقيام بالحجز.');
-        handleSignIn();
-        return;
-    }
     setBookingTarget({ month, year, booking: undefined });
   };
 
@@ -127,25 +41,19 @@ const handleSignIn = () => {
     setBookingTarget(null);
   };
 
-  const handleSaveBooking = (bookingData: Omit<Booking, 'id' | 'bookedByEmail'>) => {
-    if (!user) {
-        alert('Authentication error. Please sign in again.');
-        return;
-    }
-    
+  const handleSaveBooking = (bookingData: Omit<Booking, 'id'>) => {
     const isEditing = bookingTarget?.booking;
 
     if (isEditing) {
-        setBookings(bookings.map(b => 
-            b.id === isEditing.id 
+        setBookings(bookings.map(b =>
+            b.id === isEditing.id
                 ? { ...isEditing, ...bookingData }
                 : b
         ));
     } else {
-        const newBooking: Booking = { 
+        const newBooking: Booking = {
             ...bookingData,
-            id: Date.now(),
-            bookedByEmail: user.email 
+            id: Date.now()
         };
         setBookings([...bookings, newBooking]);
     }
@@ -153,11 +61,6 @@ const handleSignIn = () => {
   };
 
   const handleCancelBooking = (bookingId: number) => {
-      const bookingToCancel = bookings.find(b => b.id === bookingId);
-      if (!user || !bookingToCancel || user.email !== bookingToCancel.bookedByEmail) {
-          alert("You can only cancel your own bookings.");
-          return;
-      }
       if (window.confirm('هل أنت متأكد من رغبتك في إلغاء هذا الحجز؟')) {
           setBookings(bookings.filter(b => b.id !== bookingId));
       }
@@ -169,7 +72,7 @@ const handleSignIn = () => {
 
   return (
     <div className="bg-slate-50 min-h-screen text-slate-800">
-      <Header user={user} onSignIn={handleSignIn} onSignOut={handleSignOut} />
+      <Header />
       <main className="container mx-auto p-4 md:p-8">
         <Introduction />
         
@@ -195,7 +98,6 @@ const handleSignIn = () => {
           bookedMonths={getBookedMonthsForYear(selectedYear)}
           bookings={getBookingsForYear(selectedYear)}
           onBookMonth={handleOpenModal}
-          user={user}
           onEditBooking={handleOpenEditModal}
           onCancelBooking={handleCancelBooking}
         />

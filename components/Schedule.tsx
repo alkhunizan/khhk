@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Booking, User } from '../types';
+import type { Booking } from '../types';
 import { MonthSlot } from './MonthSlot';
 import { UNAVAILABLE_MONTHS } from '../constants';
 
@@ -9,7 +9,6 @@ interface ScheduleProps {
   bookedMonths: string[];
   bookings: Booking[];
   onBookMonth: (month: string, year: number) => void;
-  user: User | null;
   onEditBooking: (booking: Booking) => void;
   onCancelBooking: (bookingId: number) => void;
 }
@@ -18,9 +17,8 @@ export const Schedule: React.FC<ScheduleProps> = ({
   year, 
   months, 
   bookedMonths, 
-  bookings, 
-  onBookMonth, 
-  user,
+  bookings,
+  onBookMonth,
   onEditBooking,
   onCancelBooking
 }) => {
@@ -42,7 +40,6 @@ export const Schedule: React.FC<ScheduleProps> = ({
               isUnavailable={isUnavailable}
               bookingDetails={bookingDetails}
               onBook={() => onBookMonth(month, year)}
-              user={user}
               onEdit={onEditBooking}
               onCancel={onCancelBooking}
             />
